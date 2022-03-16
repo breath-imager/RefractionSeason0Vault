@@ -1,0 +1,14 @@
+@import '~tailwindcss/base';
+@import '~tailwindcss/components';
+@import '~tailwindcss/utilities';
+
+@import './components/general.scss';
+@import './components/minting-dapp.scss';
+
+
+
+  @font-face {
+    font-family: 'haas';
+    src: local('Neue Haas Display'), url(./fonts/NeueHaasDisplayThin.ttf) format('ttf');
+  }
+
