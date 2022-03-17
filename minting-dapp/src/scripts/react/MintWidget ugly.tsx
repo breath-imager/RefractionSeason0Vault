@@ -62,13 +62,21 @@ export default class MintWidget extends React.Component<Props, State> {
     return (
       <>
         {this.canMint() ?
-          <>
-          <a href="#" target="_blank" className="btn__primary w-inline-block" >
-          
-                <div className="btn-text">Mint Title of Artwork for  {utils.formatEther(this.props.tokenPrice.mul(this.state.mintAmount))}<span className="ethersymbol"><strong>Ξ</strong></span></div>
-                <div className="btn-child-long"></div>
-         </a>
-        </>
+          <div className="mint-widget font-haas">
+           
+           
+            <div className="price">
+              <strong>Price:</strong> {utils.formatEther(this.props.tokenPrice.mul(this.state.mintAmount))} ETH
+            </div>
+
+            <div className="controls">
+              
+            
+              <button className = "primary" onClick={() => this.mint()}>Mint</button>
+            </div>
+          </div>
+
+
           :
           <div className="cannot-mint">
             {this.props.isWhitelistMintEnabled ? <>You are not included in the <strong>greenlist</strong>.</> : <>The contract is <strong>paused</strong>.</>}<br />

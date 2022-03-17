@@ -1,5 +1,5 @@
 import React from 'react';
-import { ethers, BigNumber } from 'ethers'
+import { ethers, BigNumber, utils } from 'ethers'
 import { ExternalProvider, Web3Provider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 import NftContractType from '../lib/NftContractType';
@@ -144,7 +144,23 @@ export default class Dapp extends React.Component<Props, State> {
 
   render() {
     return (
-     <div className="mint-section">
+  <>
+  <a data-w-id="6a9b8e6c-30f6-5d01-b5c2-245bd7dba7f6" href="index.html" className="connect-wallet__back w-inline-block">
+    <div className="back-link hide">Cancel</div><img src="/build/images/Refraction_Banner_Comparison-04.png" loading="lazy" sizes="100vw" srcSet="images/Refraction_Banner_Comparison-04-p-500.png 500w, images/Refraction_Banner_Comparison-04-p-800.png 800w, images/Refraction_Banner_Comparison-04-p-1080.png 1080w, images/Refraction_Banner_Comparison-04-p-1600.png 1600w, images/Refraction_Banner_Comparison-04.png 2084w" alt="" className="back-img"/>
+  </a>
+   <a data-w-id="0d9ff052-4310-ab31-e3a6-3ab802729022" href="index.html" className="wallet-ui mintpage hide w-inline-block">
+    <div className="wallet-txt">
+    {!this.isWalletConnected() || !this.isSoldOut() ?
+      <div className="no-wallet  font-haas">
+        {!this.isWalletConnected() ? 
+          <button className="primary  font-haas" disabled={this.provider === undefined} onClick={() => this.connectWallet()}>Connect</button> : null}
+      </div>
+    : 
+      <div className="wallet-txt">{this.state.userAddress}</div> } 
+    </div>
+    <div className="wallet-txt hide">LOGOUT</div><img src="/build/images/Refraction_Banner_Comparison-04.png" loading="lazy" sizes="100vw" srcSet="images/Refraction_Banner_Comparison-04-p-500.png 500w, images/Refraction_Banner_Comparison-04-p-800.png 800w, images/Refraction_Banner_Comparison-04-p-1080.png 1080w, images/Refraction_Banner_Comparison-04-p-1600.png 1600w, images/Refraction_Banner_Comparison-04.png 2084w" alt="" className="back-img"/>
+  </a>
+  <div className="mint-section">
     <div className="mint-window__wrapper">
       <div className="w-layout-grid grid-11">
         <div className="nft__wrapper"><img src="/build/images/Rectangle-3.png" loading="lazy" alt="" className="nft-art__img"/>
@@ -163,11 +179,11 @@ export default class Dapp extends React.Component<Props, State> {
           </div>
           <div className="wrap-horizontal">
             <div className="mint-detail__wrapper">
-              <h1 className="h2-light sm">0.1</h1><img src="/build/images/cib_ethereum.png" loading="lazy" alt="" className="image-18"/>
+              <h1 className="h2-light sm">{utils.formatEther(this.state.tokenPrice)}</h1><img src="/build/images/cib_ethereum.png" loading="lazy" alt="" className="image-18"/>
             </div>
             <div className="mint-detail__wrapper">
               <div className="progress-circle"></div>
-              <p className="p nospace"><span className="text-span-14">10</span> of <span className="text-span-13">101 </span><br/>NFTs have been minted.</p>
+              <p className="p nospace"><span className="text-span-14">{this.state.totalSupply}</span> of <span className="text-span-13">{this.state.maxSupply} </span><br/>NFTs have been minted.</p>
             </div>
           </div>
           <div className="wrap-horizontal desktophide">
@@ -176,10 +192,53 @@ export default class Dapp extends React.Component<Props, State> {
           </div>
           <div className="div-block-50">
             <div className="div-block-48">
-              <a href="#" target="_blank" className="btn__primary w-inline-block">
-                <div className="btn-text">Mint Title of Artwork for 0.1<span className="ethersymbol"><strong>Ξ</strong></span></div>
-                <div className="btn-child-long"></div>
-              </a>
+          {this.isNotMainnet() ?
+          <div className="not-mainnet">
+            You are not connected to the main network.
+            <span className="small">Current network: <strong>{this.state.network?.name}</strong></span>
+          </div>
+          : null}
+  
+        {this.state.errorMessage ? <div className="error"><p>{this.state.errorMessage}</p><button onClick={() => this.setError()}>Close</button></div> : null}
+        
+        {this.isWalletConnected() ?
+          <>
+            {this.isContractReady() ?
+              <>
+
+               
+                {this.state.totalSupply < this.state.maxSupply ?
+                  <MintWidget
+                    maxSupply={this.state.maxSupply}
+                    totalSupply={this.state.totalSupply}
+                    tokenPrice={this.state.tokenPrice}
+                    maxMintAmountPerTx={this.state.maxMintAmountPerTx}
+                    isPaused={this.state.isPaused}
+                    isWhitelistMintEnabled={this.state.isWhitelistMintEnabled}
+                    isUserInWhitelist={this.state.isUserInWhitelist}
+                    mintTokens={(mintAmount) => this.mintTokens(mintAmount)}
+                    whitelistMintTokens={(mintAmount) => this.whitelistMintTokens(mintAmount)}
+                  />
+                  :
+                  <div className="collection-sold-out">
+                    <h2>Tokens have been <strong>sold out</strong>! <span className="emoji">🥳</span></h2>
+
+                    You can buy from our beloved holders on <a href={this.generateMarketplaceUrl()} target="_blank">{CollectionConfig.marketplaceConfig.name}</a>.
+                  </div>
+                }
+              </>
+              :
+              <div className="collection-not-ready">
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+
+                Loading collection data...
+              </div>
+            }
+          </>
+        : null}
               <a href="https://discord.com/invite/W7Zy2EFMP7" target="_blank" className="btn__primary long hide w-inline-block">
                 <div className="btn-lottie__wrapper">
                   <div data-w-id="91b21c57-dbd7-0528-b5c9-e2c8e090a740" data-animation-type="lottie" data-src="documents/8793-loading.json" data-loop="1" data-direction="1" data-autoplay="1" data-is-ix2-target="0" data-renderer="canvas" data-default-duration="2" data-duration="0" className="lottie-animation-3"></div>
@@ -191,16 +250,15 @@ export default class Dapp extends React.Component<Props, State> {
         </div>
       </div>
     </div>
-    <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
-      <div className="btn-text space"><span className="text-span-15">0x09..1223</span><span className="ethersymbol"><strong></strong></span></div>
-      <div className="btn-text">Log Out<span className="ethersymbol"><strong></strong></span></div>
-    </a>
+   
     <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
       <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
     </a>
   </div>
-    );
+   </> );
   }
+
+
 
   private setError(error: any = null): void
   {

@@ -136,7 +136,6 @@ export default class Dapp extends React.Component<Props, State> {
     this.setState({
       merkleProofManualAddressFeedbackMessage: 
       <>
-        <strong>Congratulations!</strong> <span className="emoji">🎉</span><br />
         Your Merkle Proof <strong>has been copied to the clipboard</strong>. You can paste it into <a href={this.generateContractUrl()} target="_blank">{this.state.networkConfig.blockExplorer.name}</a> to claim your tokens.
       </>,
     });
@@ -208,19 +207,7 @@ export default class Dapp extends React.Component<Props, State> {
             
            
 
-            {!this.isWalletConnected() || this.state.isWhitelistMintEnabled ?
-              <div className="merkle-proof-manual-address">
-                <h2>Greenlist Proof</h2>
-                <p>
-                  Anyone can generate the proof using any public address in the list, but <strong>only the owner of that address</strong> will be able to make a successful transaction by using it.
-                </p>
-
-                {this.state.merkleProofManualAddressFeedbackMessage ? <div className="feedback-message">{this.state.merkleProofManualAddressFeedbackMessage}</div> : null}
-
-                <label htmlFor="merkle-proof-manual-address">Public address:</label>
-                <input id="merkle-proof-manual-address" type="text" placeholder="0x000..." disabled={this.state.userAddress !== null} value={this.state.userAddress ?? this.state.merkleProofManualAddress} ref={(input) => this.merkleProofManualAddressInput = input!} onChange={() => {this.setState({merkleProofManualAddress: this.merkleProofManualAddressInput.value})}} /> <button onClick={() => this.copyMerkleProofToClipboard()}>Generate and copy to clipboard</button>
-              </div>
-              : null}
+          
           </div>
           : null}
       </>
