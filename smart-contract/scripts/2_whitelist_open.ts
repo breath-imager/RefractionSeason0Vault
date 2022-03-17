@@ -7,7 +7,7 @@ import NftContractProvider from '../lib/NftContractProvider';
 async function main() {
   // Check configuration
   if (CollectionConfig.whitelistAddresses.length < 1) {
-    throw '\x1b[31merror\x1b[0m ' + 'The whitelist is empty, please add some addresses to the configuration.';
+    throw '\x1b[31merror\x1b[0m ' + 'The greenlist is empty, please add some addresses to the configuration.';
   }
 
   // Build the Merkle Tree

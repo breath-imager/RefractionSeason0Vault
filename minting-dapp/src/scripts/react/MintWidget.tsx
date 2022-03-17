@@ -63,10 +63,10 @@ export default class MintWidget extends React.Component<Props, State> {
       <>
         {this.canMint() ?
           <div className="mint-widget font-haas">
-            <div className="preview">
+           
+  <div className="preview">
               <img src="/build/images/Rectangle-3.png" alt="Collection preview" />
             </div>
-
             <div className="price">
               <strong>Price:</strong> {utils.formatEther(this.props.tokenPrice.mul(this.state.mintAmount))} ETH
             </div>

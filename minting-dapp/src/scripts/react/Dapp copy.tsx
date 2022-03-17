@@ -144,61 +144,86 @@ export default class Dapp extends React.Component<Props, State> {
 
   render() {
     return (
-     <div className="mint-section">
-    <div className="mint-window__wrapper">
-      <div className="w-layout-grid grid-11">
-        <div className="nft__wrapper"><img src="/build/images/Rectangle-3.png" loading="lazy" alt="" className="nft-art__img"/>
-          <div className="wrap-horizontal hide">
-            <div className="caption-med">View on OpenSea</div>
-            <div className="caption-med">View on Etherscan</div>
-          </div>
-        </div>
-        <div className="nft-content__wrapper">
-          <div className="div-block-51">
-            <div className="div-block-42">
-              <h1 className="h5-med raygun">REFRACTION SEASON 0</h1>
+      <>
+        <div className="preview">
+          <img src="/build/images/Rectangle-3.png" alt="Collection preview" />
             </div>
-            <h2 className="h2-light">Title of NFT</h2>
-            <p className="p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+        {this.isNotMainnet() ?
+          <div className="not-mainnet">
+            You are not connected to the main network.
+            <span className="small">Current network: <strong>{this.state.network?.name}</strong></span>
           </div>
-          <div className="wrap-horizontal">
-            <div className="mint-detail__wrapper">
-              <h1 className="h2-light sm">0.1</h1><img src="/build/images/cib_ethereum.png" loading="lazy" alt="" className="image-18"/>
-            </div>
-            <div className="mint-detail__wrapper">
-              <div className="progress-circle"></div>
-              <p className="p nospace"><span className="text-span-14">10</span> of <span className="text-span-13">101 </span><br/>NFTs have been minted.</p>
-            </div>
+          : null}
+
+        {this.state.errorMessage ? <div className="error"><p>{this.state.errorMessage}</p><button onClick={() => this.setError()}>Close</button></div> : null}
+        
+        {this.isWalletConnected() ?
+          <>
+            {this.isContractReady() ?
+              <>
+                <CollectionStatus
+                  userAddress={this.state.userAddress}
+                  maxSupply={this.state.maxSupply}
+                  totalSupply={this.state.totalSupply}
+                  isPaused={this.state.isPaused}
+                  isWhitelistMintEnabled={this.state.isWhitelistMintEnabled}
+                  isUserInWhitelist={this.state.isUserInWhitelist}
+                />
+                {this.state.totalSupply < this.state.maxSupply ?
+                  <MintWidget
+                    maxSupply={this.state.maxSupply}
+                    totalSupply={this.state.totalSupply}
+                    tokenPrice={this.state.tokenPrice}
+                    maxMintAmountPerTx={this.state.maxMintAmountPerTx}
+                    isPaused={this.state.isPaused}
+                    isWhitelistMintEnabled={this.state.isWhitelistMintEnabled}
+                    isUserInWhitelist={this.state.isUserInWhitelist}
+                    mintTokens={(mintAmount) => this.mintTokens(mintAmount)}
+                    whitelistMintTokens={(mintAmount) => this.whitelistMintTokens(mintAmount)}
+                  />
+                  :
+                  <div className="collection-sold-out">
+                    <h2>Tokens have been <strong>sold out</strong>! <span className="emoji">🥳</span></h2>
+
+                    You can buy from our beloved holders on <a href={this.generateMarketplaceUrl()} target="_blank">{CollectionConfig.marketplaceConfig.name}</a>.
+                  </div>
+                }
+              </>
+              :
+              <div className="collection-not-ready">
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+
+                Loading collection data...
+              </div>
+            }
+          </>
+        : null}
+
+        {!this.isWalletConnected() || !this.isSoldOut() ?
+          <div className="no-wallet  font-haas">
+            {!this.isWalletConnected() ? <button className="primary  font-haas" disabled={this.provider === undefined} onClick={() => this.connectWallet()}>Connect Wallet</button> : null}
+            
+           
+
+            {!this.isWalletConnected() || this.state.isWhitelistMintEnabled ?
+              <div className="merkle-proof-manual-address">
+                <h2>Greenlist Proof</h2>
+                <p>
+                  Anyone can generate the proof using any public address in the list, but <strong>only the owner of that address</strong> will be able to make a successful transaction by using it.
+                </p>
+
+                {this.state.merkleProofManualAddressFeedbackMessage ? <div className="feedback-message">{this.state.merkleProofManualAddressFeedbackMessage}</div> : null}
+
+                <label htmlFor="merkle-proof-manual-address">Public address:</label>
+                <input id="merkle-proof-manual-address" type="text" placeholder="0x000..." disabled={this.state.userAddress !== null} value={this.state.userAddress ?? this.state.merkleProofManualAddress} ref={(input) => this.merkleProofManualAddressInput = input!} onChange={() => {this.setState({merkleProofManualAddress: this.merkleProofManualAddressInput.value})}} /> <button onClick={() => this.copyMerkleProofToClipboard()}>Generate and copy to clipboard</button>
+              </div>
+              : null}
           </div>
-          <div className="wrap-horizontal desktophide">
-            <div className="caption-med mobile">View on OpenSea</div>
-            <div className="caption-med mobile">View on Etherscan</div>
-          </div>
-          <div className="div-block-50">
-            <div className="div-block-48">
-              <a href="#" target="_blank" className="btn__primary w-inline-block">
-                <div className="btn-text">Mint Title of Artwork for 0.1<span className="ethersymbol"><strong>Ξ</strong></span></div>
-                <div className="btn-child-long"></div>
-              </a>
-              <a href="https://discord.com/invite/W7Zy2EFMP7" target="_blank" className="btn__primary long hide w-inline-block">
-                <div className="btn-lottie__wrapper">
-                  <div data-w-id="91b21c57-dbd7-0528-b5c9-e2c8e090a740" data-animation-type="lottie" data-src="documents/8793-loading.json" data-loop="1" data-direction="1" data-autoplay="1" data-is-ix2-target="0" data-renderer="canvas" data-default-duration="2" data-duration="0" className="lottie-animation-3"></div>
-                </div>
-                <div className="btn-child long"></div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
-      <div className="btn-text space"><span className="text-span-15">0x09..1223</span><span className="ethersymbol"><strong></strong></span></div>
-      <div className="btn-text">Log Out<span className="ethersymbol"><strong></strong></span></div>
-    </a>
-    <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
-      <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
-    </a>
-  </div>
+          : null}
+      </>
     );
   }
 
