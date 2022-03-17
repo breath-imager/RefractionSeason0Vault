@@ -1,8 +1,12 @@
 #minting-dapp {
-  @apply flex flex-col gap-6;
-  @apply mt-6 mx-auto;
-  @apply w-full;
-  @apply max-w-md;
+  //@apply flex flex-col gap-6;
+  //@apply mt-6 mx-auto;
+  //@apply w-full;
+  height: 100vh;
+  display:flex, align-items;
+  justify-content:center;
+  //@apply max-w-md;
+  width: 100%;
   background-color: black;
  
 .preview {

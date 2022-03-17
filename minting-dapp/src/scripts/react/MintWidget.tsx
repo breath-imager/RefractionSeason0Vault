@@ -63,11 +63,10 @@ export default class MintWidget extends React.Component<Props, State> {
       <>
         {this.canMint() ?
           <>
-          <a href="#" target="_blank" className="btn__primary w-inline-block" >
-          
-                <div className="btn-text">Mint Title of Artwork for  {utils.formatEther(this.props.tokenPrice.mul(this.state.mintAmount))}<span className="ethersymbol"><strong>Ξ</strong></span></div>
-                <div className="btn-child-long"></div>
-         </a>
+         
+          <img className="btn__primary" src="/build/images/btn.png" onClick={() => this.mint()}/>
+
+       
         </>
           :
           <div className="cannot-mint">

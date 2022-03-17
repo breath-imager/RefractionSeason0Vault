@@ -67,9 +67,9 @@ export default class Dapp extends React.Component<Props, State> {
         <>
           We were not able to detect <strong>MetaMask</strong>. We value <strong>privacy and security</strong> a lot so we limit the wallet options on the DAPP.<br />
           <br />
-          But don't worry! <span className="emoji">😃</span> You can always interact with the smart-contract through <a href={this.generateContractUrl()} target="_blank">{this.state.networkConfig.blockExplorer.name}</a> and <strong>we do our best to provide you with the best user experience possible</strong>, even from there.<br />
-          <br />
-          You can also get your <strong>Greenlist Proof</strong> manually, using the tool below.
+          You can always interact with the smart-contract through <a href={this.generateContractUrl()} target="_blank">{this.state.networkConfig.blockExplorer.name}</a> and <strong>we do our best to provide you with the best user experience possible</strong>, even from there.<br />
+          
+          
         </>,
       );
     }
@@ -136,7 +136,7 @@ export default class Dapp extends React.Component<Props, State> {
     this.setState({
       merkleProofManualAddressFeedbackMessage: 
       <>
-        <strong>Congratulations!</strong> <span className="emoji">🎉</span><br />
+        <strong>Congratulations!</strong> <br />
         Your Merkle Proof <strong>has been copied to the clipboard</strong>. You can paste it into <a href={this.generateContractUrl()} target="_blank">{this.state.networkConfig.blockExplorer.name}</a> to claim your tokens.
       </>,
     });
@@ -145,9 +145,7 @@ export default class Dapp extends React.Component<Props, State> {
   render() {
     return (
   <>
-  <a data-w-id="6a9b8e6c-30f6-5d01-b5c2-245bd7dba7f6" href="index.html" className="connect-wallet__back w-inline-block">
-    <div className="back-link hide">Cancel</div><img src="/build/images/Refraction_Banner_Comparison-04.png" loading="lazy" sizes="100vw" srcSet="images/Refraction_Banner_Comparison-04-p-500.png 500w, images/Refraction_Banner_Comparison-04-p-800.png 800w, images/Refraction_Banner_Comparison-04-p-1080.png 1080w, images/Refraction_Banner_Comparison-04-p-1600.png 1600w, images/Refraction_Banner_Comparison-04.png 2084w" alt="" className="back-img"/>
-  </a>
+  
    <a data-w-id="0d9ff052-4310-ab31-e3a6-3ab802729022" href="index.html" className="wallet-ui mintpage hide w-inline-block">
     <div className="wallet-txt">
     {!this.isWalletConnected() || !this.isSoldOut() ?
@@ -163,7 +161,13 @@ export default class Dapp extends React.Component<Props, State> {
   <div className="mint-section">
     <div className="mint-window__wrapper">
       <div className="w-layout-grid grid-11">
-        <div className="nft__wrapper"><img src="/build/images/Rectangle-3.png" loading="lazy" alt="" className="nft-art__img"/>
+       <div className="nft__wrapper">
+          <div className="nft-art__img">
+              <video autoPlay muted loop  playsInline data-wf-ignore="true" data-object-fit="cover">
+              <source src="/build/images/1.mp4" data-wf-ignore="true"/>
+              <source src="/build/images/REFRACTION_NFT_TEASER_EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
+              </video>
+            </div>
           <div className="wrap-horizontal hide">
             <div className="caption-med">View on OpenSea</div>
             <div className="caption-med">View on Etherscan</div>
@@ -172,10 +176,10 @@ export default class Dapp extends React.Component<Props, State> {
         <div className="nft-content__wrapper">
           <div className="div-block-51">
             <div className="div-block-42">
-              <h1 className="h5-med raygun">REFRACTION SEASON 0</h1>
+              <h1 className="h5-med raygun">REFRACTION</h1>
             </div>
-            <h2 className="h2-light">Title of NFT</h2>
-            <p className="p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+            <h2 className="h2-light">Season 0 Lanyard</h2>
+            <p className="p">Containing art from 7 of our Founding Artists, Ellie Pritts, Yoshi Sodeoka, Claire Silver, Setta Studio, Linda Dounia, p1xelfool, and Cibelle Cavalli Bastos, the Season 0 Lanyard is the key to accessing the world of Refraction. This grants the holder entry to the community, IRL and metaverse events, custom experiences, our alpha content platform, greenlist for upcoming drops, and a host of future utilities as Refraction continues to expand.</p>
           </div>
           <div className="wrap-horizontal">
             <div className="mint-detail__wrapper">
@@ -192,12 +196,7 @@ export default class Dapp extends React.Component<Props, State> {
           </div>
           <div className="div-block-50">
             <div className="div-block-48">
-          {this.isNotMainnet() ?
-          <div className="not-mainnet">
-            You are not connected to the main network.
-            <span className="small">Current network: <strong>{this.state.network?.name}</strong></span>
-          </div>
-          : null}
+          
   
         {this.state.errorMessage ? <div className="error"><p>{this.state.errorMessage}</p><button onClick={() => this.setError()}>Close</button></div> : null}
         
