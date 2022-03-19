@@ -28,6 +28,8 @@ interface State {
   merkleProofManualAddress: string;
   merkleProofManualAddressFeedbackMessage: string|JSX.Element|null;
   errorMessage: string|JSX.Element|null,
+  mintSuccess: boolean,
+  hideModal: string,
 }
 
 const defaultState: State = {
@@ -44,6 +46,8 @@ const defaultState: State = {
   merkleProofManualAddress: '',
   merkleProofManualAddressFeedbackMessage: null,
   errorMessage: null,
+  mintSuccess:  false,
+  hideModal: "hide",
 };
 
 export default class Dapp extends React.Component<Props, State> {
@@ -81,22 +85,41 @@ export default class Dapp extends React.Component<Props, State> {
     await this.initWallet();
   }
 
-  async mintTokens(amount: number): Promise<void>
+  async mintTokens(amount: number): Promise<boolean>
   {
     try {
+      
+      //setTimeout(() => { console.log ("Public Mint")  }, 2000);
       await this.contract.mint(amount, {value: this.state.tokenPrice.mul(amount)});
+
     } catch (e) {
-      this.setError(e);
+        this.setError(e);
+      return false;
+    } finally {
+      this.setState({mintSuccess: true});
+      this.setState({hideModal: ""});
+      console.log("Mint success");
+      return true;
     }
   }
 
-  async whitelistMintTokens(amount: number): Promise<void>
+
+
+  async whitelistMintTokens(amount: number): Promise<boolean>
   {
     try {
+       //setTimeout(() => { console.log ("Greenlist Mint")  }, 8000);
       await this.contract.greenlistMint(amount, Whitelist.getProofForAddress(this.state.userAddress!), {value: this.state.tokenPrice.mul(amount)});
-    } catch (e) {
-      this.setError(e);
-    }
+      this.setState({mintSuccess: true});
+      this.setState({hideModal: ""});
+      return true;
+      } catch (e) {
+        this.setError(e);
+      return false;
+    } 
+   
+  
+
   }
 
   private isWalletConnected(): boolean
@@ -144,8 +167,37 @@ export default class Dapp extends React.Component<Props, State> {
 
   render() {
     return (
-  <>
-  
+     <>   
+  <div className={`success-modal__wrapper ${this.state.hideModal}`}>
+    <div className="success-modal">
+      <div className="modal-content__wrapper">
+        <div className="modal-art__wrapper">
+          <div data-poster-url="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-poster-00001.jpg" data-video-urls="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.mp4,https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" className="background-video-14 w-background-video w-background-video-atom"><video autoPlay muted loop playsInline data-wf-ignore="true" data-object-fit="cover">
+              <source src="/build/images/1.mp4" data-wf-ignore="true"/>
+              <source src="/build/images/REFRACTION_NFT_TEASER_EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
+            </video></div>
+        </div>
+        <div className="nft-text__wrapper">
+          <h5 className="p align-c">You have minted (1) edition of </h5>
+          <h3 className="h2-light">Season 0 Lanyard</h3>
+          <h5 className="heading-409">from <span className="text-span-18">REFRACTION</span></h5>
+          <div className="div-block-53">
+            <a href="#" target="_blank" className="btn__primary mintpage w-inline-block">
+              <div className="btn-text">View on OpenSea<span className="ethersymbol"><strong></strong></span></div>
+              <div className="btn-child-long"></div>
+            </a>
+            <a href="#" target="_blank" className="btn__2 mintpage w-inline-block">
+              <div className="btn-text">Mint Again<span className="ethersymbol"><strong></strong></span></div>
+              <div className="btn-child-long"></div>
+            </a>
+          </div>
+          <a href="#" target="_blank" className="btn__txt w-inline-block">
+            <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
    <a data-w-id="0d9ff052-4310-ab31-e3a6-3ab802729022" href="index.html" className="wallet-ui mintpage hide w-inline-block">
     <div className="wallet-txt">
     {!this.isWalletConnected() || !this.isSoldOut() ?
@@ -168,10 +220,7 @@ export default class Dapp extends React.Component<Props, State> {
               <source src="/build/images/REFRACTION_NFT_TEASER_EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
               </video>
             </div>
-          <div className="wrap-horizontal hide">
-            <div className="caption-med">View on OpenSea</div>
-            <div className="caption-med">View on Etherscan</div>
-          </div>
+       
         </div>
         <div className="nft-content__wrapper">
           <div className="div-block-51">
@@ -201,12 +250,15 @@ export default class Dapp extends React.Component<Props, State> {
         {this.state.errorMessage ? <div className="error"><p>{this.state.errorMessage}</p><button onClick={() => this.setError()}>Close</button></div> : null}
         
         {this.isWalletConnected() ?
+
           <>
-            {this.isContractReady() ?
+            { this.isContractReady() ?
+
               <>
 
                
-                {this.state.totalSupply < this.state.maxSupply ?
+                { this.state.totalSupply < this.state.maxSupply ?
+
                   <MintWidget
                     maxSupply={this.state.maxSupply}
                     totalSupply={this.state.totalSupply}
@@ -220,7 +272,7 @@ export default class Dapp extends React.Component<Props, State> {
                   />
                   :
                   <div className="collection-sold-out">
-                    <h2>Tokens have been <strong>sold out</strong>! <span className="emoji">🥳</span></h2>
+                    <h2>Season 0 Lanyards have <strong>sold out</strong>! </h2>
 
                     You can buy from our beloved holders on <a href={this.generateMarketplaceUrl()} target="_blank">{CollectionConfig.marketplaceConfig.name}</a>.
                   </div>
@@ -254,7 +306,7 @@ export default class Dapp extends React.Component<Props, State> {
       <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
     </a>
   </div>
-   </> );
+   </>);
   }
 
 

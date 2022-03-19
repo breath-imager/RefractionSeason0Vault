@@ -1,6 +1,9 @@
 import { utils, BigNumber } from 'ethers';
 import React from 'react';
 
+
+let claimingNFT = false;
+
 interface Props {
   maxSupply: number,
   totalSupply: number,
@@ -9,9 +12,10 @@ interface Props {
   isPaused: boolean,
   isWhitelistMintEnabled: boolean,
   isUserInWhitelist: boolean,
-  mintTokens(mintAmount: number): Promise<void>,
-  whitelistMintTokens(mintAmount: number): Promise<void>,
+  mintTokens(mintAmount: number): Promise<boolean>,
+  whitelistMintTokens(mintAmount: number): Promise<boolean>,
 }
+
 
 interface State {
   mintAmount: number;
@@ -27,6 +31,9 @@ export default class MintWidget extends React.Component<Props, State> {
 
     this.state = defaultState;
   }
+
+
+  
 
   private canMint(): boolean {
     return !this.props.isPaused || this.canWhitelistMint();
@@ -48,23 +55,27 @@ export default class MintWidget extends React.Component<Props, State> {
     });
   }
 
-  private async mint(): Promise<void> {
+  private async mint(): Promise<boolean> {
     if (!this.props.isPaused) {
-      await this.props.mintTokens(this.state.mintAmount);
 
-      return;
+      let result = await this.props.mintTokens(this.state.mintAmount);
+
+      return result;
     }
+  
 
-    await this.props.whitelistMintTokens(this.state.mintAmount);
+    let result = this.props.whitelistMintTokens(this.state.mintAmount);
+    return result;
   }
 
   render() {
     return (
       <>
         {this.canMint() ?
+
           <>
          
-          <img className="btn__primary" src="/build/images/btn.png" onClick={() => this.mint()}/>
+          <img className="btn__primary" src="/build/images/btn.png" onClick={() => this.mint()} />
 
        
         </>

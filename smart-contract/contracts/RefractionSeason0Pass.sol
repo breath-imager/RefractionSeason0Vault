@@ -69,7 +69,7 @@ contract RefractionSeason0Pass is ERC1155, Ownable, ReentrancyGuard {
 
     modifier mintCompliance(uint256 _mintAmount) {
         require(_mintAmount > 0 && _mintAmount <= maxMintAmountPerTx, 'Invalid mint amount!');
-        require(totalMinted + _mintAmount <= maxSupply, 'Max supply exceeded!');
+        require(totalMinted + _mintAmount <= (maxSupply - reserveSize), 'Max supply exceeded!');
         _;
     }
 

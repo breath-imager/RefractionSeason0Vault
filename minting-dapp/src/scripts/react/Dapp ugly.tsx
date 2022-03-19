@@ -81,22 +81,26 @@ export default class Dapp extends React.Component<Props, State> {
     await this.initWallet();
   }
 
-  async mintTokens(amount: number): Promise<void>
+  async mintTokens(amount: number): Promise<boolean>
   {
     try {
       await this.contract.mint(amount, {value: this.state.tokenPrice.mul(amount)});
     } catch (e) {
       this.setError(e);
+      return false;
     }
+      return true;
   }
 
-  async whitelistMintTokens(amount: number): Promise<void>
+  async whitelistMintTokens(amount: number): Promise<boolean>
   {
     try {
       await this.contract.greenlistMint(amount, Whitelist.getProofForAddress(this.state.userAddress!), {value: this.state.tokenPrice.mul(amount)});
     } catch (e) {
       this.setError(e);
+      return false;
     }
+    return true;
   }
 
   private isWalletConnected(): boolean

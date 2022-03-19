@@ -10,10 +10,10 @@ const CollectionConfig: CollectionConfigInterface = {
   // yarn rename-contract NEW_CONTRACT_NAME
   // Please DO NOT change it manually!
   contractName: 'RefractionSeason0Pass',
-  tokenName: 'Refraction Season 0 Pass',
-  tokenSymbol: 'RS0P',
-  hiddenMetadataUri: "ipfs://QmfXHmqL3QLM5jz6VtykxfKyxDqPvqNR6pQwPAdrFgSpUm/1.json",
-  metadataUri: "ipfs://QmfXHmqL3QLM5jz6VtykxfKyxDqPvqNR6pQwPAdrFgSpUm/1.json",
+  tokenName: 'Refraction Season 0 Lanyard',
+  tokenSymbol: 'RS0L',
+  hiddenMetadataUri: "ipfs://QmbaEJVV6zVbtW5e6nacAMyYw28hHPGv3cVD8bKzdMXNo6/1.json",
+  metadataUri: "ipfs://QmbaEJVV6zVbtW5e6nacAMyYw28hHPGv3cVD8bKzdMXNo6/1.json",
   maxSupply: 707,
   maxPerWallet: 1,
   reserveSize: 45,
@@ -29,8 +29,8 @@ const CollectionConfig: CollectionConfigInterface = {
     price: 0.202,
     maxMintAmountPerTx: 1,
   },
-  contractAddress: "0x649D94ef9c848bacB9A7aEf6653ce5D18E841e88",
-  marketplaceIdentifier: "refraction-season-0-pass",
+  contractAddress: "0xc841DD40490348d23A39209cB4AAC81eFD1EA025",
+  marketplaceIdentifier: "refraction-season-0-lanyard",
   marketplaceConfig: openSea,
   whitelistAddresses: whitelistAddresses,
 };
