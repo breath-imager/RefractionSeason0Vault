@@ -8,6 +8,7 @@ import NetworkConfigInterface from '../../../../smart-contract/lib/NetworkConfig
 import CollectionStatus from './CollectionStatus';
 import MintWidget from './MintWidget';
 import Whitelist from '../lib/Whitelist';
+import SuccessPage from './SuccessPage';
 
 const ContractAbi = require('../../../../smart-contract/artifacts/contracts/' + CollectionConfig.contractName + '.sol/' + CollectionConfig.contractName + '.json').abi;
 
@@ -30,6 +31,9 @@ interface State {
   errorMessage: string|JSX.Element|null,
   mintSuccess: boolean,
   hideModal: string,
+  marketplaceURL: string,
+  marketplaceName: string,
+
 }
 
 const defaultState: State = {
@@ -47,7 +51,9 @@ const defaultState: State = {
   merkleProofManualAddressFeedbackMessage: null,
   errorMessage: null,
   mintSuccess:  false,
-  hideModal: "hide",
+  hideModal: "hide",  
+  marketplaceURL: "https://etherscan.io/",
+  marketplaceName: "Etherscan",
 };
 
 export default class Dapp extends React.Component<Props, State> {
@@ -167,147 +173,143 @@ export default class Dapp extends React.Component<Props, State> {
 
   render() {
     return (
-     <>   
-  <div className={`success-modal__wrapper ${this.state.hideModal}`}>
-    <div className="success-modal">
-      <div className="modal-content__wrapper">
-        <div className="modal-art__wrapper">
-          <div data-poster-url="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-poster-00001.jpg" data-video-urls="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.mp4,https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" className="background-video-14 w-background-video w-background-video-atom"><video autoPlay muted loop playsInline data-wf-ignore="true" data-object-fit="cover">
-              <source src="/build/images/1.mp4" data-wf-ignore="true"/>
-              <source src="/build/images/REFRACTION_NFT_TEASER_EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
-            </video></div>
+     <>  
+    {this.state.mintSuccess ?
+      <>
+      <SuccessPage 
+        userAddress = {this.state.userAddress || ""}
+        marketplaceURL = {this.generateContractUrl()}
+        marketplaceName = {this.state.marketplaceName}
+      />
+      </>
+    :
+    <>
+      <a data-w-id="0d9ff052-4310-ab31-e3a6-3ab802729022" href="index.html" className="wallet-ui mintpage hide w-inline-block">
+        <div className="wallet-txt">
+        {!this.isWalletConnected() || !this.isSoldOut() ?
+          <div className="no-wallet  font-haas">
+            {!this.isWalletConnected() ? 
+              <button className="primary  font-haas" disabled={this.provider === undefined} onClick={() => this.connectWallet()}>Connect</button> : null}
+          </div>
+        : 
+          <div className="wallet-txt">{this.state.userAddress}</div> 
+        } 
         </div>
-        <div className="nft-text__wrapper">
-          <h5 className="p align-c">You have minted (1) edition of </h5>
-          <h3 className="h2-light">Season 0 Lanyard</h3>
-          <h5 className="heading-409">from <span className="text-span-18">REFRACTION</span></h5>
-          <div className="div-block-53">
-            <a href="#" target="_blank" className="btn__primary mintpage w-inline-block">
-              <div className="btn-text">View on OpenSea<span className="ethersymbol"><strong></strong></span></div>
-              <div className="btn-child-long"></div>
-            </a>
-            <a href="#" target="_blank" className="btn__2 mintpage w-inline-block">
-              <div className="btn-text">Mint Again<span className="ethersymbol"><strong></strong></span></div>
-              <div className="btn-child-long"></div>
-            </a>
-          </div>
-          <a href="#" target="_blank" className="btn__txt w-inline-block">
-            <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-   <a data-w-id="0d9ff052-4310-ab31-e3a6-3ab802729022" href="index.html" className="wallet-ui mintpage hide w-inline-block">
-    <div className="wallet-txt">
-    {!this.isWalletConnected() || !this.isSoldOut() ?
-      <div className="no-wallet  font-haas">
-        {!this.isWalletConnected() ? 
-          <button className="primary  font-haas" disabled={this.provider === undefined} onClick={() => this.connectWallet()}>Connect</button> : null}
-      </div>
-    : 
-      <div className="wallet-txt">{this.state.userAddress}</div> } 
-    </div>
-    <div className="wallet-txt hide">LOGOUT</div><img src="/build/images/Refraction_Banner_Comparison-04.png" loading="lazy" sizes="100vw" srcSet="images/Refraction_Banner_Comparison-04-p-500.png 500w, images/Refraction_Banner_Comparison-04-p-800.png 800w, images/Refraction_Banner_Comparison-04-p-1080.png 1080w, images/Refraction_Banner_Comparison-04-p-1600.png 1600w, images/Refraction_Banner_Comparison-04.png 2084w" alt="" className="back-img"/>
-  </a>
-  <div className="mint-section">
-    <div className="mint-window__wrapper">
-      <div className="w-layout-grid grid-11">
-       <div className="nft__wrapper">
-          <div className="nft-art__img">
-              <video autoPlay muted loop  playsInline data-wf-ignore="true" data-object-fit="cover">
-              <source src="/build/images/1.mp4" data-wf-ignore="true"/>
-              <source src="/build/images/REFRACTION_NFT_TEASER_EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
-              </video>
-            </div>
-       
-        </div>
-        <div className="nft-content__wrapper">
-          <div className="div-block-51">
-            <div className="div-block-42">
-              <h1 className="h5-med raygun">REFRACTION</h1>
-            </div>
-            <h2 className="h2-light">Season 0 Lanyard</h2>
-            <p className="p">Containing art from 7 of our Founding Artists, Ellie Pritts, Yoshi Sodeoka, Claire Silver, Setta Studio, Linda Dounia, p1xelfool, and Cibelle Cavalli Bastos, the Season 0 Lanyard is the key to accessing the world of Refraction. This grants the holder entry to the community, IRL and metaverse events, custom experiences, our alpha content platform, greenlist for upcoming drops, and a host of future utilities as Refraction continues to expand.</p>
-          </div>
-          <div className="wrap-horizontal">
-            <div className="mint-detail__wrapper">
-              <h1 className="h2-light sm">{utils.formatEther(this.state.tokenPrice)}</h1><img src="/build/images/cib_ethereum.png" loading="lazy" alt="" className="image-18"/>
-            </div>
-            <div className="mint-detail__wrapper">
-              <div className="progress-circle"></div>
-              <p className="p nospace"><span className="text-span-14">{this.state.totalSupply}</span> of <span className="text-span-13">{this.state.maxSupply} </span><br/>NFTs have been minted.</p>
-            </div>
-          </div>
-          <div className="wrap-horizontal desktophide">
-            <div className="caption-med mobile">View on OpenSea</div>
-            <div className="caption-med mobile">View on Etherscan</div>
-          </div>
-          <div className="div-block-50">
-            <div className="div-block-48">
+        <div className="wallet-txt hide">LOGOUT</div><img src="/build/images/Refraction_Banner_Comparison-04.png" loading="lazy" sizes="100vw" srcSet="images/Refraction_Banner_Comparison-04-p-500.png 500w, images/Refraction_Banner_Comparison-04-p-800.png 800w, images/Refraction_Banner_Comparison-04-p-1080.png 1080w, images/Refraction_Banner_Comparison-04-p-1600.png 1600w, images/Refraction_Banner_Comparison-04.png 2084w" alt="" className="back-img"/>
+      </a>
+      <div className="mint-section">
+        <div className="mint-window__wrapper">
+          <div className="w-layout-grid grid-11">
+          <div className="nft__wrapper">
+              <div className="nft-art__img">
+                  <video autoPlay muted loop  playsInline data-wf-ignore="true" data-object-fit="cover">
+                  <source src="/build/images/1.mp4" data-wf-ignore="true"/>
+                  <source src="/build/images/REFRACTION_NFT_TEASER_EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
+                  </video>
+                </div>
           
-  
-        {this.state.errorMessage ? <div className="error"><p>{this.state.errorMessage}</p><button onClick={() => this.setError()}>Close</button></div> : null}
-        
-        {this.isWalletConnected() ?
-
-          <>
-            { this.isContractReady() ?
+            </div>
+            <div className="nft-content__wrapper">
+              <div className="div-block-51">
+                <div className="div-block-42">
+                  <h1 className="h5-med raygun">REFRACTION</h1>
+                </div>
+                <h2 className="h2-light">Season 0 Lanyard</h2>
+                <p className="p">Containing art from 7 of our Founding Artists, Ellie Pritts, Yoshi Sodeoka, Claire Silver, Setta Studio, Linda Dounia, p1xelfool, and Cibelle Cavalli Bastos, the Season 0 Lanyard is the key to accessing the world of Refraction. This grants the holder entry to the community, IRL and metaverse events, custom experiences, our alpha content platform, greenlist for upcoming drops, and a host of future utilities as Refraction continues to expand.</p>
+              </div>
+              <div className="wrap-horizontal">
+                <div className="mint-detail__wrapper">
+                  <h1 className="h2-light sm">{utils.formatEther(this.state.tokenPrice)}</h1><img src="/build/images/cib_ethereum.png" loading="lazy" alt="" className="image-18"/>
+                </div>
+                <div className="mint-detail__wrapper">
+                  <div className="progress-circle"></div>
+                  <p className="p nospace"><span className="text-span-14">{this.state.totalSupply}</span> of <span className="text-span-13">{this.state.maxSupply} </span><br/>NFTs have been minted.</p>
+                </div>
+              </div>
+              <div className="wrap-horizontal desktophide">
+                <div className="caption-med mobile">View on OpenSea</div>
+                <div className="caption-med mobile">View on Etherscan</div>
+              </div>
+              <div className="div-block-50">
+                <div className="div-block-48">
+              
+      
+            {this.state.errorMessage ? <div className="error"><p>{this.state.errorMessage}</p><button onClick={() => this.setError()}>Close</button></div> : null}
+            
+            {this.isWalletConnected() ?
 
               <>
+                { this.isContractReady() ?
 
-               
-                { this.state.totalSupply < this.state.maxSupply ?
+                  <>
 
-                  <MintWidget
-                    maxSupply={this.state.maxSupply}
-                    totalSupply={this.state.totalSupply}
-                    tokenPrice={this.state.tokenPrice}
-                    maxMintAmountPerTx={this.state.maxMintAmountPerTx}
-                    isPaused={this.state.isPaused}
-                    isWhitelistMintEnabled={this.state.isWhitelistMintEnabled}
-                    isUserInWhitelist={this.state.isUserInWhitelist}
-                    mintTokens={(mintAmount) => this.mintTokens(mintAmount)}
-                    whitelistMintTokens={(mintAmount) => this.whitelistMintTokens(mintAmount)}
-                  />
+                  
+                    { this.state.totalSupply < this.state.maxSupply ?
+
+                      <MintWidget
+                        maxSupply={this.state.maxSupply}
+                        totalSupply={this.state.totalSupply}
+                        tokenPrice={this.state.tokenPrice}
+                        maxMintAmountPerTx={this.state.maxMintAmountPerTx}
+                        isPaused={this.state.isPaused}
+                        isWhitelistMintEnabled={this.state.isWhitelistMintEnabled}
+                        isUserInWhitelist={this.state.isUserInWhitelist}
+                        mintTokens={(mintAmount) => this.mintTokens(mintAmount)}
+                        whitelistMintTokens={(mintAmount) => this.whitelistMintTokens(mintAmount)}
+                      />
+                      :
+                      <div className="collection-sold-out">
+                        <h2>Season 0 Lanyards have <strong>sold out</strong>! </h2>
+
+                        You can buy from our beloved holders on <a href={this.generateMarketplaceUrl()} target="_blank">{CollectionConfig.marketplaceConfig.name}</a>.
+                      </div>
+                    }
+                  </>
                   :
-                  <div className="collection-sold-out">
-                    <h2>Season 0 Lanyards have <strong>sold out</strong>! </h2>
+                  <div className="collection-not-ready">
+                    <svg className="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
 
-                    You can buy from our beloved holders on <a href={this.generateMarketplaceUrl()} target="_blank">{CollectionConfig.marketplaceConfig.name}</a>.
+                    Loading collection data...
                   </div>
                 }
               </>
-              :
-              <div className="collection-not-ready">
-                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-
-                Loading collection data...
-              </div>
-            }
-          </>
-        : null}
-              <a href="https://discord.com/invite/W7Zy2EFMP7" target="_blank" className="btn__primary long hide w-inline-block">
-                <div className="btn-lottie__wrapper">
-                  <div data-w-id="91b21c57-dbd7-0528-b5c9-e2c8e090a740" data-animation-type="lottie" data-src="documents/8793-loading.json" data-loop="1" data-direction="1" data-autoplay="1" data-is-ix2-target="0" data-renderer="canvas" data-default-duration="2" data-duration="0" className="lottie-animation-3"></div>
+            : null} 
+                  <a href="https://discord.com/invite/W7Zy2EFMP7" target="_blank" className="btn__primary long hide w-inline-block">
+                    <div className="btn-lottie__wrapper">
+                      <div data-w-id="91b21c57-dbd7-0528-b5c9-e2c8e090a740" data-animation-type="lottie" data-src="documents/8793-loading.json" data-loop="1" data-direction="1" data-autoplay="1" data-is-ix2-target="0" data-renderer="canvas" data-default-duration="2" data-duration="0" className="lottie-animation-3"></div>
+                    </div>
+                    <div className="btn-child long"></div>
+                  </a>
                 </div>
-                <div className="btn-child long"></div>
-              </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      
+      
+    
+    
    
-    <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
-      <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
-    </a>
-  </div>
-   </>);
+        <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
+          <div className="btn-text space"><span className="text-span-15">0x09..1223</span><span className="ethersymbol"><strong></strong></span></div>
+          <div className="btn-text">Log Out<span className="ethersymbol"><strong></strong></span></div>
+        </a>
+        <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
+          <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
+        </a>
+      </div>
+    </>
+  
+    }
+  </>  
+ 
+  
+  );
   }
+
 
 
 
