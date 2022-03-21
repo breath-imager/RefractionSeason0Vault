@@ -29,7 +29,7 @@ const CollectionConfig: CollectionConfigInterface = {
     price: 0.202,
     maxMintAmountPerTx: 1,
   },
-  contractAddress: "0xa6D1269A2aFaa445D39172B17D8829f762e58584",
+  contractAddress: "0x3e71094976dC7D9204C913C04a013882964aBCda",
   marketplaceIdentifier: "refraction-season-0-lanyard",
   marketplaceConfig: openSea,
   whitelistAddresses: whitelistAddresses,

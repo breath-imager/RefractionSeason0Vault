@@ -86,9 +86,9 @@ contract RefractionSeason0Pass is ERC1155, Ownable, ReentrancyGuard {
         // Verify greenlist requirements
         require(greenlistMintEnabled, 'The greenlistist sale is not enabled!');
         require(tx.origin == msg.sender && msg.sender != address(0), "No contracts!");
-        require(!greenlistClaimed[_msgSender()], 'Address already claimed!');
+        require(!greenlistClaimed[_msgSender()], 'Address already claimed.');
         bytes32 leaf = keccak256(abi.encodePacked(_msgSender()));
-        require(MerkleProof.verify(_merkleProof, merkleRoot, leaf), 'Invalid proof!');
+        require(MerkleProof.verify(_merkleProof, merkleRoot, leaf), 'Invalid proof.');
         greenlistClaimed[_msgSender()] = true;
         totalMintedPerWallet[_msgSender()] += _mintAmount;
         totalMinted += _mintAmount;
@@ -97,17 +97,17 @@ contract RefractionSeason0Pass is ERC1155, Ownable, ReentrancyGuard {
 
     function mint(uint256 _mintAmount) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) nonReentrant {
         require(!paused, 'The contract is paused!');
-        require(tx.origin == msg.sender && msg.sender != address(0), "No contracts!");
-        require(totalMintedPerWallet[msg.sender] < maxPerWallet, "Wallet has minted too many!");
+        require(tx.origin == msg.sender && msg.sender != address(0), "No contracts.");
+        require(totalMintedPerWallet[msg.sender] < maxPerWallet, "Wallet has minted too many.");
         totalMintedPerWallet[msg.sender] += _mintAmount;
         totalMinted += _mintAmount;
         _mint(msg.sender, 1, _mintAmount, "" );
     }
 
     function reserve(uint _mintAmount, address _receiver ) public onlyOwner {    
-        require(_receiver != address(0), "Don't mint to zero address");
-        require((reserveSize - _mintAmount) >= 0, "Not enough reserve");
-        require(totalMinted + _mintAmount <= maxSupply, "No more editions left");
+        require(_receiver != address(0), "Don't mint to zero address.");
+        require((reserveSize - _mintAmount) >= 0, "Not enough reserve.");
+        require(totalMinted + _mintAmount <= maxSupply, "No more editions left.");
         reserveSize -= _mintAmount;
         totalMinted += _mintAmount;
         _mint(_receiver, 1, _mintAmount, "");

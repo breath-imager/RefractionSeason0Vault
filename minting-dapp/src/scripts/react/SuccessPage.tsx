@@ -48,8 +48,11 @@ export default class SuccessPage extends React.Component<Props> {
             <h1 className="p">Now What?</h1>
             <h1 className="h4-light">Confirm the Status of Your Mint</h1>
             <p className="p">You met all the requirements for a successful mint, however it still needs to be confirmed on the blockchain. Several reasons for failure include supply running out before your mint transaction gets processed, not enough gas provided or network issues.</p>
-            <a href="#" className="link-block-2 w-inline-block">
-              <div className="text-block-18"><span className="text-span-19"><a href={targetUrl}  target="_blank">Check Status on {this.props.marketplaceName}</a></span></div>
+            <a href={targetUrl} className="link-block-2 w-inline-block" target="_blank">
+              <div className="text-block-18"><span className="text-span-19">Check Status on {this.props.marketplaceName}</span></div>
+            </a>
+            <a href="https://opensea.io/account" className="link-block-2 w-inline-block" target="_blank">
+                <div className="text-block-18"><span className="text-span-19">Check OpenSea</span></div>
             </a>
           </div>
           <div className="div-block-56">
@@ -59,18 +62,22 @@ export default class SuccessPage extends React.Component<Props> {
                 <p className="p">Thank you for your support at this early stage in Refraction’s journey. Please fill out this  form so we can notify you of upcoming events and future drops.</p>
               </div>
               <div className="btn__2 mintpage">
-                <div className="btn-text">Contact Info Form<span className="ethersymbol"><strong></strong></span></div>
-                <div className="btn-child-long"></div>
+                <a href="https://airtable.com/shr31SsRvGLeIjEY3" className="link-block-2 w-inline-block" target="_blank">
+                  <div className="btn-text">Contact Info Form<span className="ethersymbol"><strong></strong></span></div>
+                  <div className="btn-child-long"></div>
+                </a>
               </div>
             </div>
             <div>
               <div className="_80">
-                <h1 className="h4-light">Join Your Community</h1>
+                <h1 className="h4-light">Join Our Community</h1>
                 <p className="p">We’ve created a special section on our Discord that is private to NFT Holders. If you’d like to join the conversation and be looped in on all community programming, tap below!</p>
               </div>
               <div className="btn__primary mintpage align-l">
-                <div className="btn-text">Join Discord<span className="ethersymbol"><strong></strong></span></div>
-                <div className="btn-child-long"></div>
+                <a href="https://discord.com/invite/W7Zy2EFMP7" target="_blank" className="link-block-2 w-inline-block">
+                  <div className="btn-text">Join Discord<span className="ethersymbol"><strong></strong></span></div>
+                  <div className="btn-child-long"></div>
+                </a>
               </div>
             </div>
           </div>
