@@ -94,19 +94,15 @@ export default class Dapp extends React.Component<Props, State> {
   async mintTokens(amount: number): Promise<boolean>
   {
     try {
-      
       //setTimeout(() => { console.log ("Public Mint")  }, 2000);
       await this.contract.mint(amount, {value: this.state.tokenPrice.mul(amount)});
-
+      this.setState({mintSuccess: true});
+      this.setState({hideModal: ""});
+      return true;
     } catch (e) {
         this.setError(e);
       return false;
-    } finally {
-      this.setState({mintSuccess: true});
-      this.setState({hideModal: ""});
-      console.log("Mint success");
-      return true;
-    }
+    } 
   }
 
 
@@ -175,13 +171,13 @@ export default class Dapp extends React.Component<Props, State> {
     return (
      <>  
     {this.state.mintSuccess ?
-      <>
+      
       <SuccessPage 
         userAddress = {this.state.userAddress || ""}
         marketplaceURL = {this.generateContractUrl()}
         marketplaceName = {this.state.marketplaceName}
       />
-      </>
+      
     :
     <>
       <a data-w-id="0d9ff052-4310-ab31-e3a6-3ab802729022" href="index.html" className="wallet-ui mintpage hide w-inline-block">

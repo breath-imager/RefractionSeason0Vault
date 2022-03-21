@@ -13,6 +13,7 @@ export default class SuccessPage extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
 
+
   targetUrl = 'https://www.'+ this.props.marketplaceName +'.io/address/' + this.props.userAddress;
 
   }
@@ -21,17 +22,18 @@ export default class SuccessPage extends React.Component<Props> {
   
   render() {
     return (
-      <>
-  <div className="success-modal__wrapper">
+      <>       
+ <div className="success-modal__wrapper">
     <div className="success-modal">
-      <div className="modal-content__wrapper w-row">
-        <div className="fullcolumn-c w-col w-col-4 w-col-stack">
+      <div className="modal-content__wrapper">
+        <div className="fullcolumn-c">
           <div className="modal-art__wrapper">
-           <div data-poster-url="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-poster-00001.jpg" data-video-urls="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.mp4,https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" className="background-video-14 w-background-video w-background-video-atom"><video autoPlay loop muted playsInline data-wf-ignore="true" data-object-fit="cover">
-                      <source src="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.mp4" data-wf-ignore="true"/>
-                      <source src="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
+             <div data-poster-url="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-poster-00001.jpg" data-video-urls="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.mp4,https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" className="background-video-14 w-background-video w-background-video-atom">
+                <video autoPlay loop muted playsInline data-wf-ignore="true" data-object-fit="cover">
+                  <source src="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.mp4" data-wf-ignore="true"/>
+                  <source src="https://uploads-ssl.webflow.com/61f62d1cc76f20840570a980/6232c352d8d3194987902235_REFRACTION_NFT_TEASER EDIT_v3_-transcode.webm" data-wf-ignore="true"/>
                     </video>
-          </div>
+                  </div>
           <div className="nft-text__wrapper minttemplate">
             <h5 className="p align-c">You have minted (1) edition of </h5>
             <h3 className="h2-light align-l align-c">Season 0 Lanyard</h3>
@@ -40,7 +42,8 @@ export default class SuccessPage extends React.Component<Props> {
             </a>
           </div>
         </div>
-        <div className="fullcolumn-c w-col w-col-8 w-col-stack">
+        </div>
+        <div className="fullcolumn-c">
           <div className="div-block-55">
             <h1 className="p">Now What?</h1>
             <h1 className="h4-light">Confirm the Status of Your Mint</h1>
@@ -49,34 +52,33 @@ export default class SuccessPage extends React.Component<Props> {
               <div className="text-block-18"><span className="text-span-19"><a href={targetUrl}  target="_blank">Check Status on {this.props.marketplaceName}</a></span></div>
             </a>
           </div>
-          <div className="columns-3 w-row">
-            <div className="column-9 w-col w-col-6">
+          <div className="div-block-56">
+            <div className="div-block-57">
               <div className="_80">
                 <h1 className="h4-light">Collect Your Perks</h1>
-                <p className="p">Thank you for your support at this early stage in Refraction’s journey. Please fill out this  form so we can notify you of upcoming events and future drops.</p>
+                <p className="p">Thank you for your support at this early stage in Refraction’s journey. Please fill out this  form so we can notify you of upcoming events and future drops.</p>
               </div>
-              <a href="https://airtable.com/shr31SsRvGLeIjEY3" target="_blank" className="btn__2 mintpage w-inline-block">
+              <div className="btn__2 mintpage">
                 <div className="btn-text">Contact Info Form<span className="ethersymbol"><strong></strong></span></div>
                 <div className="btn-child-long"></div>
-              </a>
+              </div>
             </div>
-            <div className="w-col w-col-6">
+            <div>
               <div className="_80">
                 <h1 className="h4-light">Join Your Community</h1>
                 <p className="p">We’ve created a special section on our Discord that is private to NFT Holders. If you’d like to join the conversation and be looped in on all community programming, tap below!</p>
               </div>
-              <a href="https://discord.com/invite/W7Zy2EFMP7" target="_blank" className="btn__primary mintpage align-l w-inline-block">
+              <div className="btn__primary mintpage align-l">
                 <div className="btn-text">Join Discord<span className="ethersymbol"><strong></strong></span></div>
                 <div className="btn-child-long"></div>
-              </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-    </>
+</>
     );
   }
 }

@@ -13350,10 +13350,19 @@ figcaption {
 }
 
 .modal-content__wrapper {
-  width: 94%;
-  height: 90vh;
-  margin-right: auto;
-  margin-left: auto;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 94%;
+    height: 90vh;
+    margin-right: auto;
+    margin-left: auto;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
 }
 
 .image-20 {
@@ -14150,22 +14159,27 @@ figcaption {
   align-items: flex-start;
 }
 
+
 .fullcolumn-c {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  height: 100%;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    max-width: 1200px;
+    margin-right: 2em;
+    padding: 16px 36px 16px 16px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
 }
+
 
 .text-span-19 {
   color: #e2b013;
@@ -14186,6 +14200,13 @@ figcaption {
 
 .div-block-55 {
   margin-bottom: 4em;
+}
+
+.div-block-56 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
 }
 
 @media screen and (min-width: 1440px) {
