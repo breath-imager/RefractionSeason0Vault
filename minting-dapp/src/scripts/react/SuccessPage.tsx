@@ -7,15 +7,17 @@ interface Props {
 }
 
 
+let targetUrl:string;
+
 export default class SuccessPage extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
 
-
+  targetUrl = 'https://www.'+ this.props.marketplaceName +'.io/address/' + this.props.userAddress;
 
   }
 
-
+ 
   
   render() {
     return (
@@ -44,7 +46,7 @@ export default class SuccessPage extends React.Component<Props> {
             <h1 className="h4-light">Confirm the Status of Your Mint</h1>
             <p className="p">You met all the requirements for a successful mint, however it still needs to be confirmed on the blockchain. Several reasons for failure include supply running out before your mint transaction gets processed, not enough gas provided or network issues.</p>
             <a href="#" className="link-block-2 w-inline-block">
-              <div className="text-block-18"><span className="text-span-19">Check Status on <a href={this.props.marketplaceURL}  target="_blank">{this.props.marketplaceName}</a></span></div>
+              <div className="text-block-18"><span className="text-span-19"><a href={targetUrl}  target="_blank">Check Status on {this.props.marketplaceName}</a></span></div>
             </a>
           </div>
           <div className="columns-3 w-row">
