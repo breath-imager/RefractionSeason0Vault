@@ -180,12 +180,13 @@ export default class Dapp extends React.Component<Props, State> {
       
     :
     <>
+        {!this.isWalletConnected() ? <button className="wallet-txt font-haas" disabled={this.provider === undefined} onClick={() => this.connectWallet()}><div className="btn-txt">Connect</div></button>  : null}
       <a data-w-id="0d9ff052-4310-ab31-e3a6-3ab802729022" href="index.html" className="wallet-ui mintpage hide w-inline-block">
         <div className="wallet-txt">
         {!this.isWalletConnected() || !this.isSoldOut() ?
-          <div className="no-wallet  font-haas">
+        <div className="no-wallet  font-haas">
             {!this.isWalletConnected() ? 
-              <button className="primary  font-haas" disabled={this.provider === undefined} onClick={() => this.connectWallet()}>Connect</button> : null}
+             <button className="wallet-txt font-haas" disabled={this.provider === undefined} onClick={() => this.connectWallet()}><div className="btn-txt">Connect</div></button> : null}
           </div>
         : 
           <div className="wallet-txt">{this.state.userAddress}</div> 
@@ -284,29 +285,12 @@ export default class Dapp extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-      
-      
-    
-    
-   
-        <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
-          <div className="btn-text space"><span className="text-span-15">0x09..1223</span><span className="ethersymbol"><strong></strong></span></div>
-          <div className="btn-text">Log Out<span className="ethersymbol"><strong></strong></span></div>
-        </a>
-        <a href="#" target="_blank" className="btn__txt hidedesktop mintpage w-inline-block">
-          <div className="btn-text">Back to Refraction Festival<span className="ethersymbol"><strong></strong></span></div>
-        </a>
       </div>
     </>
-  
     }
-  </>  
- 
-  
+  </>   
   );
   }
-
-
 
 
   private setError(error: any = null): void
