@@ -25,8 +25,13 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
                                                                                                                                                                         
                                                                                                                                                                         
 */
-                                                                                                                                                        
-contract RefractionSeason0Pass is ERC1155, Ownable, ReentrancyGuard {
+
+ // to verify that the sender posseses the season 0 lanyard at time of mint
+ interface IToken {
+        function balanceOf(address, uint256) external view returns (uint256);
+ }      
+
+contract RefractionSeason0Vault is ERC1155, Ownable, ReentrancyGuard {
 
     using SafeMath for uint256;
 
@@ -49,6 +54,8 @@ contract RefractionSeason0Pass is ERC1155, Ownable, ReentrancyGuard {
     bool public greenlistMintEnabled = false;
     bool public revealed = true;
 
+    mapping(uint256 => address) public lanyardClaimed;
+
     constructor(
         string memory _tokenName,
         string memory _tokenSymbol,
@@ -70,6 +77,8 @@ contract RefractionSeason0Pass is ERC1155, Ownable, ReentrancyGuard {
             maxMintAmountPerTx = _maxMintAmountPerTx; 
             hiddenMetadataUri = _hiddenMetadataUri;                 
     }  
+
+   
 
     modifier mintCompliance(uint256 _mintAmount) {
         require(_mintAmount > 0 && _mintAmount <= maxMintAmountPerTx, 'Invalid mint amount!');
@@ -99,9 +108,18 @@ contract RefractionSeason0Pass is ERC1155, Ownable, ReentrancyGuard {
         require(!paused, 'The contract is paused!');
         require(tx.origin == msg.sender && msg.sender != address(0), "No contracts.");
         require(totalMintedPerWallet[msg.sender] < maxPerWallet, "Wallet has minted too many.");
-        totalMintedPerWallet[msg.sender] += _mintAmount;
+        address patronAccessToken = 0x000000001234567890ABCDEF0001112022222222;
+        require(IToken(patronAccessToken).balanceOf(msg.sender),"HAVE NOT MINTED A TOKENS");
+
+        // not possible to cast between fixed sized arrays and dynamic size arrays so we need to create a temp dynamic array and then copy the elements
+        uint256[] memory ids  = new uint256[](7);
+        ids[0] = 1; ids[1] = 2; ids[2] = 3; ids[3] = 4; ids[4] = 5; ids[5] = 6; ids[6] = 7; 
+        uint256[] memory amounts  = new uint256[](7);
+        amounts[0] = 1; amounts[1] = 1; amounts[2] = 1; amounts[3] = 1; amounts[4] = 1; amounts[5] = 1; amounts[6] = 1;
+        
+        lanyardClaimed[lanyardId] = msg.sender;
         totalMinted += _mintAmount;
-        _mint(msg.sender, 1, _mintAmount, "" );
+        _mintBatch(msg.sender, ids, amounts, "");
     }
 
     function reserve(uint _mintAmount, address _receiver ) public onlyOwner {    
