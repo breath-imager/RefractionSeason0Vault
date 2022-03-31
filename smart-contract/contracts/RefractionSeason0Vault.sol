@@ -9,24 +9,10 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 /*
-
-      ___           ___           ___         ___           ___           ___                                   ___           ___                    ___           ___           ___           ___           ___           ___                                           ___           ___                       ___           ___          _____    
-     /  /\         /  /\         /  /\       /  /\         /  /\         /  /\          ___       ___          /  /\         /__/\                  /  /\         /  /\         /  /\         /  /\         /  /\         /__/\                                         /  /\         /__/\          ___        /  /\         /  /\        /  /::\   
-    /  /::\       /  /:/_       /  /:/_     /  /::\       /  /::\       /  /:/         /  /\     /  /\        /  /::\        \  \:\                /  /:/_       /  /:/_       /  /::\       /  /:/_       /  /::\        \  \:\                                       /  /::\        \  \:\        /__/|      /  /::\       /  /::\      /  /:/\:\  
-   /  /:/\:\     /  /:/ /\     /  /:/ /\   /  /:/\:\     /  /:/\:\     /  /:/         /  /:/    /  /:/       /  /:/\:\        \  \:\              /  /:/ /\     /  /:/ /\     /  /:/\:\     /  /:/ /\     /  /:/\:\        \  \:\                      ___     ___    /  /:/\:\        \  \:\      |  |:|     /  /:/\:\     /  /:/\:\    /  /:/  \:\ 
-  /  /:/~/:/    /  /:/ /:/_   /  /:/ /:/  /  /:/~/:/    /  /:/~/::\   /  /:/  ___    /  /:/    /__/::\      /  /:/  \:\   _____\__\:\            /  /:/ /::\   /  /:/ /:/_   /  /:/~/::\   /  /:/ /::\   /  /:/  \:\   _____\__\:\                    /__/\   /  /\  /  /:/~/::\   _____\__\:\     |  |:|    /  /:/~/::\   /  /:/~/:/   /__/:/ \__\:|
- /__/:/ /:/___ /__/:/ /:/ /\ /__/:/ /:/  /__/:/ /:/___ /__/:/ /:/\:\ /__/:/  /  /\  /  /::\    \__\/\:\__  /__/:/ \__\:\ /__/::::::::\          /__/:/ /:/\:\ /__/:/ /:/ /\ /__/:/ /:/\:\ /__/:/ /:/\:\ /__/:/ \__\:\ /__/::::::::\                   \  \:\ /  /:/ /__/:/ /:/\:\ /__/::::::::\  __|__|:|   /__/:/ /:/\:\ /__/:/ /:/___ \  \:\ /  /:/
- \  \:\/:::::/ \  \:\/:/ /:/ \  \:\/:/   \  \:\/:::::/ \  \:\/:/__\/ \  \:\ /  /:/ /__/:/\:\      \  \:\/\ \  \:\ /  /:/ \  \:\~~\~~\/          \  \:\/:/~/:/ \  \:\/:/ /:/ \  \:\/:/__\/ \  \:\/:/~/:/ \  \:\ /  /:/ \  \:\~~\~~\/                    \  \:\  /:/  \  \:\/:/__\/ \  \:\~~\~~\/ /__/::::\   \  \:\/:/__\/ \  \:\/:::::/  \  \:\  /:/ 
-  \  \::/~~~~   \  \::/ /:/   \  \::/     \  \::/~~~~   \  \::/       \  \:\  /:/  \__\/  \:\      \__\::/  \  \:\  /:/   \  \:\  ~~~            \  \::/ /:/   \  \::/ /:/   \  \::/       \  \::/ /:/   \  \:\  /:/   \  \:\  ~~~                      \  \:\/:/    \  \::/       \  \:\  ~~~     ~\~~\:\   \  \::/       \  \::/~~~~    \  \:\/:/  
-   \  \:\        \  \:\/:/     \  \:\      \  \:\        \  \:\        \  \:\/:/        \  \:\     /__/:/    \  \:\/:/     \  \:\                 \__\/ /:/     \  \:\/:/     \  \:\        \__\/ /:/     \  \:\/:/     \  \:\                           \  \::/      \  \:\        \  \:\           \  \:\   \  \:\        \  \:\         \  \::/   
-    \  \:\        \  \::/       \  \:\      \  \:\        \  \:\        \  \::/          \__\/     \__\/      \  \::/       \  \:\                  /__/:/       \  \::/       \  \:\         /__/:/       \  \::/       \  \:\                           \__\/        \  \:\        \  \:\           \__\/    \  \:\        \  \:\         \__\/    
-     \__\/         \__\/         \__\/       \__\/         \__\/         \__\/                                 \__\/         \__\/                  \__\/         \__\/         \__\/         \__\/         \__\/         \__\/                                         \__\/         \__\/                     \__\/         \__\/                  
-
-                                                                                                                                                                        
-                                                                                                                                                                        
+                                                                                                                                                                 
 */
 
- // to verify that the sender posseses the season 0 lanyard at time of mint
+ // to verify that the sender posseses the season 0 NFT at time of mint
  interface IToken {
         function balanceOf(address, uint256) external view returns (uint256);
  }      
@@ -37,7 +23,7 @@ contract RefractionSeason0Vault is ERC1155, Ownable, ReentrancyGuard {
 
     uint256 public cost;
     uint256 public maxMintAmountPerTx;
-    uint256 public maxSupply;
+    uint256 public totalSupply;
     uint256 public maxPerWallet;
     uint256 public reserveSize;
     uint256 public totalMinted = 0;
@@ -53,36 +39,39 @@ contract RefractionSeason0Vault is ERC1155, Ownable, ReentrancyGuard {
     bool public paused = true;
     bool public greenlistMintEnabled = false;
     bool public revealed = true;
+    address season0NFT;
 
-    mapping(uint256 => address) public lanyardClaimed;
+    mapping(address => bool) public artClaimed;
 
     constructor(
         string memory _tokenName,
         string memory _tokenSymbol,
         uint256 _cost,
-        uint256 _maxSupply,
+        uint256 _totalSupply,
         uint256 _maxPerWallet,
         uint256 _reserveSize,
         uint256 _maxMintAmountPerTx,
         string memory _metadataUri,
         string memory _hiddenMetadataUri
+        address _season0NFT
         
     ) ERC1155(_metadataUri) {
             tokenName = _tokenName;
             tokenSymbol = _tokenSymbol;
             cost = _cost;
-            maxSupply = _maxSupply;
+            totalSupply = _totalSupply;
             maxPerWallet = _maxPerWallet;
             reserveSize = _reserveSize;
             maxMintAmountPerTx = _maxMintAmountPerTx; 
-            hiddenMetadataUri = _hiddenMetadataUri;                 
+            hiddenMetadataUri = _hiddenMetadataUri; 
+            season0NFT = _season0NFT;                
     }  
 
    
 
     modifier mintCompliance(uint256 _mintAmount) {
         require(_mintAmount > 0 && _mintAmount <= maxMintAmountPerTx, 'Invalid mint amount!');
-        require(totalMinted + _mintAmount <= (maxSupply - reserveSize), 'Max supply exceeded!');
+        require(totalMinted + _mintAmount <= (totalSupply - reserveSize), 'Max supply exceeded!');
         _;
     }
 
@@ -108,8 +97,8 @@ contract RefractionSeason0Vault is ERC1155, Ownable, ReentrancyGuard {
         require(!paused, 'The contract is paused!');
         require(tx.origin == msg.sender && msg.sender != address(0), "No contracts.");
         require(totalMintedPerWallet[msg.sender] < maxPerWallet, "Wallet has minted too many.");
-        address patronAccessToken = 0x000000001234567890ABCDEF0001112022222222;
-        require(IToken(patronAccessToken).balanceOf(msg.sender),"HAVE NOT MINTED A TOKENS");
+        //address season0NFT = 0xa6D1269A2aFaa445D39172B17D8829f762e58584;
+        //require(IToken(season0NFT).balanceOf(msg.sender, uint256(1)),"NO_SEASON_0_NFT");
 
         // not possible to cast between fixed sized arrays and dynamic size arrays so we need to create a temp dynamic array and then copy the elements
         uint256[] memory ids  = new uint256[](7);
@@ -117,15 +106,35 @@ contract RefractionSeason0Vault is ERC1155, Ownable, ReentrancyGuard {
         uint256[] memory amounts  = new uint256[](7);
         amounts[0] = 1; amounts[1] = 1; amounts[2] = 1; amounts[3] = 1; amounts[4] = 1; amounts[5] = 1; amounts[6] = 1;
         
-        lanyardClaimed[lanyardId] = msg.sender;
+        artClaimed[msg.sender] = true;
         totalMinted += _mintAmount;
         _mintBatch(msg.sender, ids, amounts, "");
+    }
+
+    /**
+     * @notice Allow owner to send `mintNumber` tokens without cost to multiple addresses
+     */
+    function gift(address[] calldata receivers, uint256 mintNumber) external onlyOwner {
+        require((totalSupply() + (receivers.length * mintNumber)) <= totalSupply, "MINT_TOO_LARGE");
+        // make sure they have a season 0 NFT
+        //address season0NFT = 0xa6D1269A2aFaa445D39172B17D8829f762e58584;
+        //require(IToken(season0NFT).balanceOf(msg.sender, uint256(1)),"NO_SEASON_0_NFT");
+
+         // not possible to cast between fixed sized arrays and dynamic size arrays so we need to create a temp dynamic array and then copy the elements
+        uint256[] memory ids  = new uint256[](7);
+        ids[0] = 1; ids[1] = 2; ids[2] = 3; ids[3] = 4; ids[4] = 5; ids[5] = 6; ids[6] = 7; 
+        uint256[] memory amounts  = new uint256[](7);
+        amounts[0] = mintNumber; amounts[1] = mintNumber; amounts[2] = mintNumber; amounts[3] = mintNumber; amounts[4] = mintNumber; amounts[5] = mintNumber; amounts[6] = mintNumber;
+        for (uint256 i = 0; i < receivers.length; i++) {
+             _mintBatch(receivers[i], ids, amounts, "");
+        }
+        
     }
 
     function reserve(uint _mintAmount, address _receiver ) public onlyOwner {    
         require(_receiver != address(0), "Don't mint to zero address.");
         require((reserveSize - _mintAmount) >= 0, "Not enough reserve.");
-        require(totalMinted + _mintAmount <= maxSupply, "No more editions left.");
+        require(totalMinted + _mintAmount <= totalSupply, "No more editions left.");        
         reserveSize -= _mintAmount;
         totalMinted += _mintAmount;
         _mint(_receiver, 1, _mintAmount, "");
@@ -139,8 +148,8 @@ contract RefractionSeason0Vault is ERC1155, Ownable, ReentrancyGuard {
         return totalMinted;
     }
     
-    function getMaxSupply() public view returns(uint256){
-        return maxSupply;
+    function getTotalSupply() public view returns(uint256){
+        return totalSupply;
     }
 
     function name() public view returns (string memory) {
