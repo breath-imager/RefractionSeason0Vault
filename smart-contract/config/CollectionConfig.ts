@@ -12,7 +12,7 @@ const CollectionConfig: CollectionConfigInterface = {
   contractName: 'RefractionSeason0Vault',
   tokenName: 'Refraction Season 0 Vault',
   tokenSymbol: 'RS0V',
-  hiddenMetadataUri: "ipfs://QmP1axuy8Rnb15oLxi4erfD81JkZ2fqMryKA4iUCVZuMzH/1.json",
+  hiddenMetadataUri: 'ipfs://__CID__/hidden.json',
   metadataUri: "ipfs://QmP1axuy8Rnb15oLxi4erfD81JkZ2fqMryKA4iUCVZuMzH/1.json",
   maxSupply: 707,
   maxPerWallet: 1,

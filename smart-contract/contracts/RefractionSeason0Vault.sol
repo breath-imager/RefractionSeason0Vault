@@ -140,6 +140,27 @@ contract RefractionSeason0Vault is ERC1155, Ownable, ReentrancyGuard {
         _mint(_receiver, 1, _mintAmount, "");
     }
 
+    function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
+        require(_exists(_tokenId), 'ERC1155Metadata: URI query for nonexistent token');
+
+        if (revealed == false) {
+        return hiddenMetadataUri;
+        }
+
+        string memory currentBaseURI = _baseURI();
+        return bytes(currentBaseURI).length > 0
+            ? string(abi.encodePacked(currentBaseURI, _tokenId.toString(), uriSuffix))
+            : '';
+    }
+
+    function setUriPrefix(string memory _uriPrefix) public onlyOwner {
+        uriPrefix = _uriPrefix;
+    }
+
+    function setUriSuffix(string memory _uriSuffix) public onlyOwner {
+        uriSuffix = _uriSuffix;
+    }
+
     function setBaseURI(string memory newUri) public onlyOwner {
         _setURI(newUri);
     }
