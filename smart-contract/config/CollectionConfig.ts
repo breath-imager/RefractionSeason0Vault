@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import CollectionConfigInterface from '../lib/CollectionConfigInterface';
 import { ethereumTestnet, ethereumMainnet } from '../lib/Networks';
 import { openSea } from '../lib/Marketplaces';
@@ -9,14 +10,13 @@ const CollectionConfig: CollectionConfigInterface = {
   // The contract name can be updated using the following command:
   // yarn rename-contract NEW_CONTRACT_NAME
   // Please DO NOT change it manually!
-  contractName: 'RefractionSeason0Vault',
-  tokenName: 'Refraction Season 0 Vault',
-  tokenSymbol: 'RS0V',
-  hiddenMetadataUri: 'ipfs://__CID__/hidden.json',
-  metadataUri: "ipfs://QmP1axuy8Rnb15oLxi4erfD81JkZ2fqMryKA4iUCVZuMzH/1.json",
+  contractName: 'RefractionSeason0Collection',
+  tokenName: 'Refraction Season 0 Collection',
+  tokenSymbol: 'RS0C',
+  uriPrefix: "ipfs://QmVbbBDnVGQnEKcv8ZohAwSDVxbTmhNAjF5KcKCxLkYjqx/",
   maxSupply: 707,
-  maxPerWallet: 1,
-  reserveSize: 0,
+  
+  
   whitelistSale: {
     price: 0.202,
     maxMintAmountPerTx: 1,
@@ -29,8 +29,8 @@ const CollectionConfig: CollectionConfigInterface = {
     price: 0.202,
     maxMintAmountPerTx: 1,
   },
-  contractAddress: "0x3e71094976dC7D9204C913C04a013882964aBCda",
-  marketplaceIdentifier: "refraction-season-0-vault",
+  contractAddress: "0xbA1395e09fa53f75F6FcC16f004604a0015b8409",
+  marketplaceIdentifier: "refraction-season-0-collection",
   marketplaceConfig: openSea,
   whitelistAddresses: whitelistAddresses,
 };

@@ -12,11 +12,8 @@ export default interface CollectionConfigInterface {
   contractName: string;
   tokenName: string;
   tokenSymbol: string;
-  hiddenMetadataUri: string;
-  metadataUri: string;
-  maxPerWallet: number;
+  uriPrefix: string;
   maxSupply: number;
-  reserveSize: number;
   whitelistSale: SaleConfig;
   preSale: SaleConfig;
   publicSale: SaleConfig;
