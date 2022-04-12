@@ -12,9 +12,9 @@ const CollectionConfig: CollectionConfigInterface = {
   contractName: 'RefractionSeason0Collection',
   tokenName: 'Refraction Season 0 Collection',
   tokenSymbol: 'RS0C',
-  uri: "ipfs://QmWs1AmxYg8JW8p996saRQqk6qR5oXQffc62pvv9BoeSxN/",
+  uri: "ipfs://QmZbz6Xv637NaVcrFZgk9oWwiFE28mxyC7YEyT27M5xjt2/",
   maxSupply: 707,
-  contractAddress: "0x7F18ed518999Ce53a237d49f639679573d002bfa",
+  contractAddress: "0x89d52621C11567461A025FAc00fD2F5Eade605ef",
   marketplaceIdentifier: "refraction-season-0-collection",
   marketplaceConfig: openSea,
 };
