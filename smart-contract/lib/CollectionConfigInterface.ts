@@ -12,13 +12,9 @@ export default interface CollectionConfigInterface {
   contractName: string;
   tokenName: string;
   tokenSymbol: string;
-  uriPrefix: string;
+  uri: string;
   maxSupply: number;
-  whitelistSale: SaleConfig;
-  preSale: SaleConfig;
-  publicSale: SaleConfig;
   contractAddress: string|null;
-  whitelistAddresses: string[];
   marketplaceIdentifier: string;
   marketplaceConfig: MarketplaceConfigInterface,
 };

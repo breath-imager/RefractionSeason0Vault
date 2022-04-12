@@ -5,8 +5,7 @@ import CollectionConfig from './CollectionConfig';
 const ContractArguments = [
   CollectionConfig.tokenName,
   CollectionConfig.tokenSymbol,
-  CollectionConfig.maxSupply,
-  CollectionConfig.uriPrefix
+  CollectionConfig.maxSupply
   
 ] as const;
 

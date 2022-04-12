@@ -6,95 +6,35 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/utils/Strings.sol"; 
 
 /*
  
-     ..      ...           ..      .         .....               ..      ...          ..                    ...              .....              .....     .          ....              ...     ...     
-  :~"8888x :"%888x      x88f` `..x88. .>  .H8888888x.  '`+    :~"8888x :"%888x     :**888H: `: .xH""     xH88"`~ .x8X     .H8888888h.  ~-.    .d88888Neu. 'L     .x~X88888Hx.       .=*8888n.."%888:   
- 8    8888Xf  8888>   :8888   xf`*8888%  :888888888888x.  !  8    8888Xf  8888>   X   `8888k XX888     :8888   .f"8888Hf  888888888888x  `>   F""""*8888888F    H8X 888888888h.    X    ?8888f '8888   
-X88x. ?8888k  8888X  :8888f .888  `"`    8~    `"*88888888" X88x. ?8888k  8888X  '8hx  48888 ?8888    :8888>  X8L  ^""`  X~     `?888888hx~  *      `"*88*"    8888:`*888888888:   88x. '8888X  8888>  
-'8888L'8888X  '%88X  88888' X8888. >"8x  !      .  `f""""   '8888L'8888X  '%88X  '8888 '8888 `8888    X8888  X888h       '      x8.^"*88*"    -....    ue=:.   88888:        `%8  '8888k 8888X  '"*8h. 
- "888X 8888X:xnHH(`` 88888  ?88888< 888>  ~:...-` :8L <)88:  "888X 8888X:xnHH(``  %888>'8888  8888    88888  !88888.      `-:- X8888x                :88N  ` . `88888          ?>  "8888 X888X .xH8    
-   ?8~ 8888X X8888   88888   "88888 "8%      .   :888:>X88!    ?8~ 8888X X8888      "8 '888"  8888    88888   %88888           488888>               9888L   `. ?888%           X    `8" X888!:888X    
- -~`   8888> X8888   88888 '  `8888>      :~"88x 48888X ^`   -~`   8888> X8888     .-` X*"    8888    88888 '> `8888>        .. `"88*         uzu.   `8888L    ~*??.            >   =~`  X888 X888X    
- :H8x  8888  X8888   `8888> %  X88!      <  :888k'88888X     :H8x  8888  X8888       .xhx.    8888    `8888L %  ?888   !   x88888nX"      . ,""888i   ?8888   .x88888h.        <     :h. X8*` !888X    
- 8888> 888~  X8888    `888X  `~""`   :     d8888f '88888X    8888> 888~  X8888     .H88888h.~`8888.>   `8888  `-*""   /   !"*8888888n..  :  4  9888L   %888> :"""8888888x..  .x     X888xX"   '8888..: 
- 48"` '8*~   `8888!`    "88k.      .~     :8888!    ?8888>   48"` '8*~   `8888!`  .~  `%88!` '888*~      "888.      :"   '    "*88888888*   '  '8888   '88%  `    `*888888888"    :~`888f     '*888*"  
-  ^-==""      `""         `""*==~~`       X888!      8888~    ^-==""      `""           `"     ""          `""***~"`             ^"***"`         "*8Nu.z*"           ""***""          ""        `"`    
-                                          '888       X88f                                                                                                                                              
-                                           '%8:     .8*"                                                                                                                                               
-                                              ^----~"`                                                                                                                                                 
-       ...               ..      .          ..                     ...                 ....              ...     ...                                                                                   
-   .x888888hx    :    x88f` `..x88. .>   :**888H: `: .xH""     .x888888hx    :     .x~X88888Hx.       .=*8888n.."%888:          .n~~%x.                                                                
-  d88888888888hxx   :8888   xf`*8888%   X   `8888k XX888      d88888888888hxx     H8X 888888888h.    X    ?8888f '8888        x88X   888.                                                              
- 8" ... `"*8888%`  :8888f .888  `"`    '8hx  48888 ?8888     8" ... `"*8888%`    8888:`*888888888:   88x. '8888X  8888>      X888X   8888L                                                             
-!  "   ` .xnxx.    88888' X8888. >"8x  '8888 '8888 `8888    !  "   ` .xnxx.      88888:        `%8  '8888k 8888X  '"*8h.    X8888X   88888                                                             
-X X   .H8888888%:  88888  ?88888< 888>  %888>'8888  8888    X X   .H8888888%:  . `88888          ?>  "8888 X888X .xH8       88888X   88888X                                                            
-X 'hn8888888*"   > 88888   "88888 "8%     "8 '888"  8888    X 'hn8888888*"   > `. ?888%           X    `8" X888!:888X       88888X   88888X                                                            
-X: `*88888%`     ! 88888 '  `8888>       .-` X*"    8888    X: `*88888%`     !   ~*??.            >   =~`  X888 X888X       88888X   88888f                                                            
-'8h.. ``     ..x8> `8888> %  X88!          .xhx.    8888    '8h.. ``     ..x8>  .x88888h.        <     :h. X8*` !888X       48888X   88888                                                             
- `88888888888888f   `888X  `~""`   :     .H88888h.~`8888.>   `88888888888888f  :"""8888888x..  .x     X888xX"   '8888..:     ?888X   8888"                                                             
-  '%8888888888*"      "88k.      .~     .~  `%88!` '888*~     '%8888888888*"   `    `*888888888"    :~`888f     '*888*"       "88X   88*`                                                              
-     ^"****""`          `""*==~~`             `"     ""          ^"****""`             ""***""          ""        `"`           ^"==="`                                                                
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-      ...                  ....               ...            ...            ..      .           ...              .....              .....     .          ....              ...     ...                 
-   xH88"`~ .x8X        .x~X88888Hx.       .zf"` `"tu     .zf"` `"tu      x88f` `..x88. .>    xH88"`~ .x8X     .H8888888h.  ~-.    .d88888Neu. 'L     .x~X88888Hx.       .=*8888n.."%888:               
- :8888   .f"8888Hf    H8X 888888888h.    x88      '8N.  x88      '8N.  :8888   xf`*8888%   :8888   .f"8888Hf  888888888888x  `>   F""""*8888888F    H8X 888888888h.    X    ?8888f '8888               
-:8888>  X8L  ^""`    8888:`*888888888:   888k     d88&  888k     d88& :8888f .888  `"`    :8888>  X8L  ^""`  X~     `?888888hx~  *      `"*88*"    8888:`*888888888:   88x. '8888X  8888>              
-X8888  X888h         88888:        `%8   8888N.  @888F  8888N.  @888F 88888' X8888. >"8x  X8888  X888h       '      x8.^"*88*"    -....    ue=:.   88888:        `%8  '8888k 8888X  '"*8h.             
-88888  !88888.     . `88888          ?>  `88888 9888%   `88888 9888%  88888  ?88888< 888> 88888  !88888.      `-:- X8888x                :88N  ` . `88888          ?>  "8888 X888X .xH8                
-88888   %88888     `. ?888%           X    %888 "88F      %888 "88F   88888   "88888 "8%  88888   %88888           488888>               9888L   `. ?888%           X    `8" X888!:888X                
-88888 '> `8888>      ~*??.            >     8"   "*h=~     8"   "*h=~ 88888 '  `8888>     88888 '> `8888>        .. `"88*         uzu.   `8888L    ~*??.            >   =~`  X888 X888X                
-`8888L %  ?888   !  .x88888h.        <    z8Weu          z8Weu        `8888> %  X88!      `8888L %  ?888   !   x88888nX"      . ,""888i   ?8888   .x88888h.        <     :h. X8*` !888X                
- `8888  `-*""   /  :"""8888888x..  .x    ""88888i.   Z  ""88888i.   Z  `888X  `~""`   :    `8888  `-*""   /   !"*8888888n..  :  4  9888L   %888> :"""8888888x..  .x     X888xX"   '8888..:             
-   "888.      :"   `    `*888888888"    "   "8888888*  "   "8888888*     "88k.      .~       "888.      :"   '    "*88888888*   '  '8888   '88%  `    `*888888888"    :~`888f     '*888*"              
-     `""***~"`             ""***""            ^"**""         ^"**""        `""*==~~`           `""***~"`             ^"***"`         "*8Nu.z*"           ""***""          ""        `"`                
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
+                                                                                                                                                                                                
                                                                                                                                                              
 */
-
- // to verify that the sender posseses the season 0 NFT at time of mint
- interface IToken {
-        function balanceOf(address, uint256) external view returns (uint256);
- }      
 
 contract RefractionSeason0Collection is ERC1155, Ownable, ReentrancyGuard {
 
     using SafeMath for uint256;
     using Strings for uint256;
-    string public uriPrefix;
-    string public uriSuffix = '.json';
-    uint256 public cost;
     uint256 public totalSupply;
     uint256 public totalMinted = 0;
-    mapping(address => uint256) private totalMintedPerWallet;
     mapping(uint => string) public tokenURI;
-
-    
     string public tokenName;
     string public tokenSymbol;
-
-
     bool public paused = true;
-
 
     constructor(
         string memory _tokenName,
         string memory _tokenSymbol,
-        uint256 _totalSupply,
-        string memory _uriPrefix
+        uint256 _totalSupply
         
-    ) ERC1155(_uriPrefix) {
+        
+    ) ERC1155("") {
             tokenName = _tokenName;
             tokenSymbol = _tokenSymbol;
-            totalSupply = _totalSupply;
-            uriPrefix = _uriPrefix;               
+            totalSupply = _totalSupply;           
     }  
 
 
@@ -103,9 +43,6 @@ contract RefractionSeason0Collection is ERC1155, Ownable, ReentrancyGuard {
      */
     function gift(address[] calldata receivers, uint256 mintNumber) external onlyOwner {
         require((getTotalMinted() + (receivers.length * mintNumber)) <= totalSupply, "MINT_TOO_LARGE");
-        // make sure they have a season 0 NFT
-        //address season0NFT = 0xa6D1269A2aFaa445D39172B17D8829f762e58584;
-        //require(IToken(season0NFT).balanceOf(msg.sender, uint256(1)),"NO_SEASON_0_NFT");
         require(!paused, 'CONTRACT_PAUSED');
          // not possible to cast between fixed sized arrays and dynamic size arrays so we need to create a temp dynamic array and then copy the elements
         uint256[] memory ids  = new uint256[](7);
@@ -144,11 +81,6 @@ contract RefractionSeason0Collection is ERC1155, Ownable, ReentrancyGuard {
         return tokenSymbol;
     }
  
-    function setCost(uint256 _cost) public onlyOwner {
-        require(_cost != cost, 'New price is identical to old price.');
-        cost = _cost;
-    } 
-
     function setPaused(bool _state) public onlyOwner {
         paused = _state;
     }

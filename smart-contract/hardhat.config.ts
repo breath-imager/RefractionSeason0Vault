@@ -22,34 +22,6 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
   }
 });
 
-task('generate-root-hash', 'Generates and prints out the root hash for the current whitelist', async () => {
-  // Check configuration
-  if (CollectionConfig.whitelistAddresses.length < 1) {
-    throw 'The whitelist is empty, please add some addresses to the configuration.';
-  }
-
-  // Build the Merkle Tree
-  const leafNodes = CollectionConfig.whitelistAddresses.map(addr => keccak256(addr));
-  const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
-  const rootHash = '0x' + merkleTree.getRoot().toString('hex');
-
-  console.log('The Merkle Tree root hash for the current whitelist is: ' + rootHash);
-});
-
-task('generate-proof', 'Generates and prints out the whitelist proof for the given address (compatible with block explorers such as Etherscan)', async (taskArgs: {address: string}) => {
-  // Check configuration
-  if (CollectionConfig.whitelistAddresses.length < 1) {
-    throw 'The whitelist is empty, please add some addresses to the configuration.';
-  }
-
-  // Build the Merkle Tree
-  const leafNodes = CollectionConfig.whitelistAddresses.map(addr => keccak256(addr));
-  const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
-  const proof = merkleTree.getHexProof(keccak256(taskArgs.address)).toString().replace(/'/g, '').replace(/ /g, '');
-
-  console.log('The whitelist proof for the given address is: ' + proof);
-})
-.addPositionalParam('address', 'The public address');
 
 task('rename-contract', 'Renames the smart contract replacing all occurrences in source files', async (taskArgs: {newName: string}, hre) => {
   // Validate new name
